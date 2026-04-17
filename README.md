@@ -1,2 +1,10 @@
 # enhanced_rul_regression
 Remaining Useful Life (RUL) prediction is a critical part of predictive maintenance in Industry 4.0 environments. This project takes a deep learning approach towards predicting the RUL of engines from the NASA C-MAPSS dataset, and introduces novelty by integrating both uncertainty awareness via Monte Carlo Dropout and explainability via KernelSHAP.
+
+Traditional predictive maintenance models (1) depend on fully labeled datasets, (2) provide single-value RUL predictions without confidence intervals, and (3) do not explain which sensor features contribute to machine degradation. This project aims to resolve all three drawbacks in one integrated model that can learn normal 
+
+The first notebook downloads the NASA C-MAPSS FD001 dataset with 100 engines, and creates many overlapping windows from the healthy lifetime of each engine for unsupervised training of a deep learning neural network. This neural network is an Long Short-Term Memroy (LSTM) autoencoder with a bidirectional encoder that learns representations of the healthy behavior of engines ("healthy" stage is the first 40% of the engine's lifetime).
+
+The second notebook uses the learned representations of the first notebook for RUL prediction with a Gated Recurrent Unit (GRU) head on the pretrained LSTM encoder. Monte Carlo Dropout is used to implement uncertainty awareness, and temporal attention weights and KernelSHAP embue explainability both local to an engine and globally across all engines. The metrics used to compare models are Mean Absolute Error (MAE), Root Mean Square Error (RMSE), and asymmetric NASA Score (that penalizes late predictions of failure more than early predictions).
+
+The best model was the proposed model with uncertainty-awareness, scoring MAE = 9.225027, RMSE = 13.063071, and NASA Score = 350.038849. The second best model was the deterministic version of the proposed model, that scored MAE = 9.498816, RMSE = 13.293484, and NASA Score = 362.138977. The baseline LSTM came in last with MAE = 10.510681, RMSE = 14.329703, and NASA Score = 397.928528.
